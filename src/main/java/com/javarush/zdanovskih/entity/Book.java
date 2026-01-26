@@ -1,6 +1,9 @@
 package com.javarush.zdanovskih.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -13,18 +16,21 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @NotEmpty
+    @NotNull
+    @Column(unique=true)
     private String name;
-    //private long author_id;
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name="author_to_book", joinColumns = @JoinColumn(name="book_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name="author_id", referencedColumnName = "id"))
-    private List<Author> authors = new ArrayList<Author>();
+    private List<Author> authors = new ArrayList<>();
+    @NotInFutureYear
     private int printYear;
-    //private long publisher_id;
     @ManyToOne @JoinColumn (name="publisher_id")
     public Publisher publisher;
     private String bbk;
     private String isbn;
+    @Min(value=1, message = "Число страниц должно быть положительным")
     private int pages;
 }
 

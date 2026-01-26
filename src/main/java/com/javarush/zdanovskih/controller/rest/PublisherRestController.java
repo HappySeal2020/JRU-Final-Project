@@ -2,8 +2,10 @@ package com.javarush.zdanovskih.controller.rest;
 
 import com.javarush.zdanovskih.entity.Publisher;
 import com.javarush.zdanovskih.repository.PublisherRepository;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,10 +18,10 @@ import static com.javarush.zdanovskih.constant.Const.REST_PUBLISHER_PATH;
 @Slf4j
 @RestController
 @RequestMapping(REST_MAP)
+@Validated
 public class PublisherRestController {
     private final PublisherRepository publisherRepository;
     //private final PublisherService publisherService;
-    //private final String PUBLISHER_PATH="/publishers";
 
     public PublisherRestController(PublisherRepository publisherRepository) {
         this.publisherRepository = publisherRepository;
@@ -33,17 +35,17 @@ public class PublisherRestController {
     @ResponseStatus(HttpStatus.OK)
     public List<Publisher> getAllPublishers() {
         return publisherRepository.findAll();
-        // .getAllPublishers();
     }
 
     //Create
     @PostMapping(REST_PUBLISHER_PATH)
     @ResponseStatus(HttpStatus.CREATED)
-    public Publisher createPublisher(@RequestBody Publisher publisher) {
+    public Publisher createPublisher(@Valid @RequestBody Publisher publisher) {
         try{
+            log.info("REST API - Creating new publisher: {}", publisher);
             return publisherRepository.save(publisher);
         } catch (Exception e){
-            log.error("Create publisher={}", publisher, e);
+            log.error("Create publisher={} failed", publisher, e);
             throw badRequest(e);
         }
     }
@@ -51,13 +53,13 @@ public class PublisherRestController {
     //Update
     @PutMapping(REST_PUBLISHER_PATH+"/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Publisher updatePublisher(@PathVariable Long  id, @RequestBody Publisher publisher) {
+    public Publisher updatePublisher(@PathVariable Long  id, @Valid @RequestBody Publisher publisher) {
         if(id.equals(publisher.getId())) {
-            log.info("Updating publisher={}", publisher);
+            log.info("REST API - Updating publisher={}", publisher);
             return publisherRepository.save(publisher);
         }
         else {
-            log.error("Update publisher with incorrect id={}", id);
+            log.error("REST API - Update publisher with incorrect id={}", id);
             throw badRequest(new InputMismatchException("Incorrect id"));
         }
     }
@@ -67,9 +69,10 @@ public class PublisherRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePublisher(@PathVariable Long id) {
         try{
+            log.info("REST API - Deleting publisher={}", id);
             publisherRepository.deleteById(id);
         } catch (Exception e){
-            log.error("Delete publisher id={}", id, e);
+            log.error("Delete publisher id={} failed", id, e);
             throw badRequest(e);
         }
     }

@@ -4,8 +4,10 @@ import com.javarush.zdanovskih.dto.AuthorDto;
 import com.javarush.zdanovskih.entity.Author;
 import com.javarush.zdanovskih.mapper.Mapper;
 import com.javarush.zdanovskih.repository.AuthorRepository;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,6 +22,7 @@ import static com.javarush.zdanovskih.constant.Const.REST_MAP;
 @Slf4j
 @RestController
 @RequestMapping(REST_MAP)
+@Validated
 public class AuthorRestController {
 
     private final AuthorRepository authorRepository;
@@ -32,17 +35,19 @@ public class AuthorRestController {
     @GetMapping(REST_AUTHOR_PATH)
     @ResponseStatus(HttpStatus.OK)
     public List<AuthorDto> getAllAuthors() {
+        log.info("REST API - getAllAuthors");
         return authorRepository.findAll().stream().map(Mapper::toAuthorDto).collect(Collectors.toList());
     }
 
     //Create
     @PostMapping(REST_AUTHOR_PATH)
     @ResponseStatus(HttpStatus.CREATED)
-    public AuthorDto createAuthor (@RequestBody AuthorDto author) {
+    public AuthorDto createAuthor (@Valid @RequestBody AuthorDto author) {
         try{
+            log.info("REST API - Creating author: {}", author);
             return Mapper.toAuthorDto(authorRepository.save(Mapper.toAuthor(author)));
         } catch (Exception e){
-            log.error("Create author={}", author, e);
+            log.error("Create author={} failed", author, e);
             throw badRequest(e);
         }
     }
@@ -50,12 +55,13 @@ public class AuthorRestController {
     //Update
     @PutMapping(REST_AUTHOR_PATH+"/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Author updateAuthor (@PathVariable Long id, @RequestBody Author author) {
+    public Author updateAuthor (@PathVariable Long id, @Valid @RequestBody Author author) {
         if(id.equals(author.getId())) {
+            log.info("REST API - Updating author: {}", author);
             return authorRepository.save(author);
         }
         else {
-            log.error("Update author with incorrect id={}", id);
+            log.error("REST API - Update author with incorrect id={} failed", id);
             throw badRequest(new InputMismatchException("Incorrect id"));
         }
     }
@@ -63,11 +69,12 @@ public class AuthorRestController {
     //Delete
     @DeleteMapping(REST_AUTHOR_PATH+"/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePublisher(@PathVariable Long id) {
+    public void deleteAuthor(@PathVariable Long id) {
         try{
+            log.info("REST API - Deleting author: {}", id);
             authorRepository.deleteById(id);
         } catch (Exception e){
-            log.error("Delete author id={}", id, e);
+            log.error("Delete author id={} failed", id, e);
             throw badRequest(e);
         }
     }

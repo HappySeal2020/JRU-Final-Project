@@ -3,8 +3,10 @@ package com.javarush.zdanovskih.controller.rest;
 import com.javarush.zdanovskih.entity.Author;
 import com.javarush.zdanovskih.entity.Book;
 import com.javarush.zdanovskih.service.BookService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -17,6 +19,7 @@ import static com.javarush.zdanovskih.constant.Const.REST_MAP;
 @Slf4j
 @RestController
 @RequestMapping(REST_MAP)
+@Validated
 public class BookRestController {
     private final BookService bookService;
     public BookRestController(BookService bookService) {
@@ -41,13 +44,7 @@ public class BookRestController {
     //Read
     @GetMapping(REST_BOOK_PATH)
     @ResponseStatus(HttpStatus.OK)
-    /*
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll().stream().map(Mapper::bookToBookDto).collect();
 
-        )   .collect(Collectors.toList());;
-    }
-*/
     public List<Book> getAllBooks() {
         return bookService.getAllBooks();
     }
@@ -55,12 +52,13 @@ public class BookRestController {
     //Create
     @PostMapping (REST_BOOK_PATH)
     @ResponseStatus(HttpStatus.CREATED)
-    public Book createBook(@RequestBody Book book) {
+    public Book createBook(@Valid @RequestBody Book book) {
         try{
             book.setId(0);
+            log.info("REST API - Creating book: {}", book);
             return bookService.saveBook(book);
         } catch (Exception e){
-            log.error("Create book={}", book, e);
+            log.error("Create book={} failed", book, e);
             throw badRequest(e);
         }
     }
@@ -68,12 +66,13 @@ public class BookRestController {
     //Update
     @PutMapping(REST_BOOK_PATH+"/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Book updateBook (@PathVariable Long id, @RequestBody Book book) {
+    public Book updateBook (@PathVariable Long id, @Valid @RequestBody Book book) {
         if(id.equals(book.getId())) {
+            log.info("REST API - Updating book: {}", book);
             return bookService.saveBook(book);
         }
         else {
-            log.error("Update author with incorrect id={}", id);
+            log.error("REST API - Update author with incorrect id={}", id);
             throw badRequest(new InputMismatchException("Incorrect id"));
         }
     }
@@ -83,9 +82,10 @@ public class BookRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePublisher(@PathVariable Long id) {
         try{
+            log.info("REST API - Deleting publisher: {}", id);
             bookService.deleteById(id);
         } catch (Exception e){
-            log.error("Delete book id={}", id, e);
+            log.error("Delete publisher id={} failed", id, e);
             throw badRequest(e);
         }
     }

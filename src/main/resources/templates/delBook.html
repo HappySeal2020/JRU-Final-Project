@@ -1,8 +1,14 @@
 <form th:action="@{/books/del}" th:object="${book}" method="post">
-    <input type="hidden" name="_method" value="delete">
+    <body>
     <input type="hidden" name="_csrf" th:value="${_csrf.token}">
     <input type="hidden" th:field="*{id}"/>
+
+    <style>
+        p {
+            line-height: 1.5;}
+    </style>
     <h2>Удалим книгу</h2>
+    <p>
     <label>Книга</label>
     <input type="text" readonly th:field="*{name}" size="100"/>
     <br>
@@ -28,9 +34,8 @@
     <input type="text" readonly th:field="*{pages}"/>
     <br>
     <br>
-
     <button type="submit">Удалить</button>
     <a th:href="@{/books}"> Назад </a>
-    <br>
-
+    </p>
+    </body>
 </form>
