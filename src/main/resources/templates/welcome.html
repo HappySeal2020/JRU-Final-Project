@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добро пожаловать</title>
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Добро пожаловать, <span th:text="${#authentication.name }">Пользователь</span>!</h1>
+    <!--<span th:text="${#authentication.name}"></span>    -->
+
+    <p>Вы успешно вошли в систему.</p>
+    <p>Выберите нужный раздел для работы с книгами:</p>
+    <a th:href="@{/authors}"> Авторы </a>
+    <a th:href="@{/publishers}"> Издательства </a>
+    <a th:href="@{/books}"> Книги </a>
+    <a th:href="@{/login}"> Выйти </a>
+</div>
+</body>
+</html>

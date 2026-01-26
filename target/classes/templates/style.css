@@ -1,0 +1,14 @@
+.row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.row label {
+    width: 140px;
+}
+
+.row input,
+.row select {
+    margin-left: 10px;
+}

@@ -1,0 +1,49 @@
+<form th:action="@{/books/add}" th:object="${book}" method="post">
+    <body>
+    <input type="hidden" name="_method" value="post">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+    <input type="hidden" th:field="*{id}"/>
+
+        <style>
+            p {
+                line-height: 1.5;}
+        </style>
+        <h2>Добавляем новую книгу</h2>
+        <p>
+            <label>Книга</label>
+            <input type="text" size="100" th:field="*{name}"/>
+            <br>
+            <label>Автор(ы)</label>
+            <select multiple size="5" th:field="*{authors}">
+                <option th:each="a : ${allAuthors}"
+                        th:value="${a.id}"
+                        th:text="${a.name}">
+                </option>
+            </select>
+            <br>
+            <label>Год издания</label>
+            <input type="text" th:field="*{printYear}"/>
+            <br>
+            <label>Издатель</label>
+            <select size="5" th:field="*{publisher}">
+                <option th:each="b : ${allPublishers}"
+                        th:value="${b.id}"
+                        th:text="${b.name}">
+                </option>
+            </select>
+            <br>
+            <label>BBK</label>
+            <input type="text" th:field="*{bbk}"/>
+            <br>
+            <label>ISBN</label>
+            <input type="text" th:field="*{isbn}"/>
+            <br>
+            <label>Страниц</label>
+            <input type="text" th:field="*{pages}"/>
+
+            <br>
+            <button type="submit">Сохранить</button>
+            <a th:href="@{/books}"> Назад </a>
+        </p>
+        </body>
+    </form>

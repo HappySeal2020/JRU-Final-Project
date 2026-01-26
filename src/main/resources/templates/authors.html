@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Authors</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 60%;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+        th {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Список авторов</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Автор</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="author : ${authorsPage}">
+        <td th:text="${author.getId()}"></td>
+        <td th:text="${author.getName()}"></td>
+        <td>
+            <a th:href="@{/authors/put/{id}(id=${author.getId()})}">
+                Изменить
+            </a>
+        </td>
+        <td>
+            <a th:href="@{/authors/del/{id}(id=${author.getId()})}">
+                Удалить
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<!-- ПАГИНАЦИЯ -->
+<div class="pagination">
+    <a th:if="${authorsPage.hasPrevious()}"
+       th:href="@{/authors(page=${currentPage - 1})}">
+        ⬅ Предыдущая
+    </a>
+
+    <span th:each="i : ${#numbers.sequence(0, authorsPage.totalPages - 1)}">
+        <a th:href="@{/authors(page=${i})}"
+           th:text="${i + 1}"
+           th:classappend="${i == currentPage} ? 'active'">
+        </a>
+    </span>
+
+    <a th:if="${authorsPage.hasNext()}"
+       th:href="@{/authors(page=${currentPage + 1})}">
+        Следующая ➡
+    </a>
+</div>
+<br>
+<a th:href="@{/authors/add}"> Добавить нового автора </a>
+<br>
+<br>
+<a th:href="@{/welcome}"> На главную </a>
+
+</body>
+</html>

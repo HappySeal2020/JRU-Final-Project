@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Books</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 60%;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+        th {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Список книг</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Автор(ы)</th>
+        <th>Год выпуска</th>
+        <th>Издательство</th>
+        <th>BBK</th>
+        <th>ISBN</th>
+        <th>Страниц</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${booksPage}">
+        <td th:text="${book.getId()}"></td>
+        <td th:text="${book.getName()}"></td>
+        <td>
+            <span th:each="authr,iter:${book.getAuthors()}" th:text="${!iter.last} ? ${authr.getName()}+', ' : ${authr.getName()}"> </span>
+        </td>
+        <td th:text="${book.getPrintYear()}"></td>
+        <td th:text="${book.getPublisher().getName()}"></td>
+        <td th:text="${book.getBbk()}"></td>
+        <td th:text="${book.getIsbn()}"></td>
+        <td th:text="${book.getPages()}"></td>
+        <td>
+            <a th:href="@{/books/put/{id}(id=${book.getId()})}">
+                Изменить
+            </a>
+        </td>
+        <td>
+            <a th:href="@{/books/del/{id}(id=${book.getId()})}">
+                Удалить
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- ПАГИНАЦИЯ -->
+<div class="pagination">
+    <a th:if="${booksPage.hasPrevious()}"
+       th:href="@{/books(page=${currentPage - 1})}">
+        ⬅ Предыдущая
+    </a>
+
+    <span th:each="i : ${#numbers.sequence(0, booksPage.totalPages - 1)}">
+        <a th:href="@{/books(page=${i})}"
+           th:text="${i + 1}"
+           th:classappend="${i == currentPage} ? 'active'">
+        </a>
+    </span>
+
+    <a th:if="${booksPage.hasNext()}"
+       th:href="@{/books(page=${currentPage + 1})}">
+        Следующая ➡
+    </a>
+</div>
+<br>
+<a th:href="@{/books/add}"> Добавить новую книгу </a>
+<br>
+<br>
+
+<a th:href="@{/welcome}"> На главную </a>
+
+</body>
+</html>
