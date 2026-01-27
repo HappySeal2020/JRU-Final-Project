@@ -16,8 +16,8 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotEmpty
-    @NotNull
+    @NotEmpty(message="Book name is mandatory field")
+    @NotNull(message="Book name is mandatory field")
     @Column(unique=true)
     private String name;
     @ManyToMany(cascade = CascadeType.MERGE)
@@ -25,6 +25,7 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name="author_id", referencedColumnName = "id"))
     private List<Author> authors = new ArrayList<>();
     @NotInFutureYear
+    @Min(value = 1900, message = "Print year must be greater 1900")
     private int printYear;
     @ManyToOne @JoinColumn (name="publisher_id")
     public Publisher publisher;

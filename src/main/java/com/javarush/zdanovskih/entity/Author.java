@@ -13,8 +13,8 @@ public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotNull
-    @NotEmpty
+    @NotNull(message="Author name is mandatory field")
+    @NotEmpty(message="Author name is mandatory field")
     @Column(unique=true)
     private String name;
 

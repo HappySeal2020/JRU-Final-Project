@@ -43,13 +43,8 @@ public class AuthorRestController {
     @PostMapping(REST_AUTHOR_PATH)
     @ResponseStatus(HttpStatus.CREATED)
     public AuthorDto createAuthor (@Valid @RequestBody AuthorDto author) {
-        try{
-            log.info("REST API - Creating author: {}", author);
-            return Mapper.toAuthorDto(authorRepository.save(Mapper.toAuthor(author)));
-        } catch (Exception e){
-            log.error("Create author={} failed", author, e);
-            throw badRequest(e);
-        }
+        log.info("REST API - Creating author: {}", author);
+        return Mapper.toAuthorDto(authorRepository.save(Mapper.toAuthor(author)));
     }
 
     //Update
@@ -70,13 +65,8 @@ public class AuthorRestController {
     @DeleteMapping(REST_AUTHOR_PATH+"/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAuthor(@PathVariable Long id) {
-        try{
-            log.info("REST API - Deleting author: {}", id);
-            authorRepository.deleteById(id);
-        } catch (Exception e){
-            log.error("Delete author id={} failed", id, e);
-            throw badRequest(e);
-        }
+        log.info("REST API - Deleting author: {}", id);
+        authorRepository.deleteById(id);
     }
 
     private ResponseStatusException notFound(Author author) {

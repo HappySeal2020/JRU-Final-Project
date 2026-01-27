@@ -12,8 +12,8 @@ public class Publisher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotEmpty
-    @NotNull
+    @NotEmpty(message="Publisher name is mandatory field")
+    @NotNull(message="Publisher name is mandatory field")
     @Column(unique = true)
     private String name;
     private String site;

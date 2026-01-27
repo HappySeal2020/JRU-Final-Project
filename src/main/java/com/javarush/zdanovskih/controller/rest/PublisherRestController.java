@@ -21,7 +21,7 @@ import static com.javarush.zdanovskih.constant.Const.REST_PUBLISHER_PATH;
 @Validated
 public class PublisherRestController {
     private final PublisherRepository publisherRepository;
-    //private final PublisherService publisherService;
+
 
     public PublisherRestController(PublisherRepository publisherRepository) {
         this.publisherRepository = publisherRepository;
@@ -41,13 +41,8 @@ public class PublisherRestController {
     @PostMapping(REST_PUBLISHER_PATH)
     @ResponseStatus(HttpStatus.CREATED)
     public Publisher createPublisher(@Valid @RequestBody Publisher publisher) {
-        try{
-            log.info("REST API - Creating new publisher: {}", publisher);
-            return publisherRepository.save(publisher);
-        } catch (Exception e){
-            log.error("Create publisher={} failed", publisher, e);
-            throw badRequest(e);
-        }
+        log.info("REST API - Creating new publisher: {}", publisher);
+        return publisherRepository.save(publisher);
     }
 
     //Update
@@ -68,13 +63,8 @@ public class PublisherRestController {
     @DeleteMapping(REST_PUBLISHER_PATH+"/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePublisher(@PathVariable Long id) {
-        try{
-            log.info("REST API - Deleting publisher={}", id);
-            publisherRepository.deleteById(id);
-        } catch (Exception e){
-            log.error("Delete publisher id={} failed", id, e);
-            throw badRequest(e);
-        }
+        log.info("REST API - Deleting publisher={}", id);
+        publisherRepository.deleteById(id);
     }
 
     private ResponseStatusException notFound(Publisher publisher) {

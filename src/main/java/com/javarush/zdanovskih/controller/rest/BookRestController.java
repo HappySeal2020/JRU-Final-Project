@@ -53,14 +53,9 @@ public class BookRestController {
     @PostMapping (REST_BOOK_PATH)
     @ResponseStatus(HttpStatus.CREATED)
     public Book createBook(@Valid @RequestBody Book book) {
-        try{
-            book.setId(0);
-            log.info("REST API - Creating book: {}", book);
-            return bookService.saveBook(book);
-        } catch (Exception e){
-            log.error("Create book={} failed", book, e);
-            throw badRequest(e);
-        }
+        book.setId(0);
+        log.info("REST API - Creating book: {}", book);
+        return bookService.saveBook(book);
     }
 
     //Update
@@ -81,13 +76,8 @@ public class BookRestController {
     @DeleteMapping(REST_BOOK_PATH+"/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePublisher(@PathVariable Long id) {
-        try{
-            log.info("REST API - Deleting publisher: {}", id);
-            bookService.deleteById(id);
-        } catch (Exception e){
-            log.error("Delete publisher id={} failed", id, e);
-            throw badRequest(e);
-        }
+        log.info("REST API - Deleting publisher: {}", id);
+        bookService.deleteById(id);
     }
 
 
