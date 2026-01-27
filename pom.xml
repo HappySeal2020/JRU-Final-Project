@@ -138,5 +138,13 @@
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-maven-plugin 
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-maven-plugin</artifactId>
+            <version>11.11.2</version>
+        </dependency> -->
+
+
     </dependencies>
 </project>
