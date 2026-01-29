@@ -31,7 +31,9 @@ public class AppSecurityConfig {
                         //WEB
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/logout").permitAll()
+                        .requestMatchers("/actuator/**").authenticated()
                         .requestMatchers(HttpMethod.GET,"/welcome")
+
                         .hasAnyAuthority(Role.ADMIN.getAuthority(),Role.USER.getAuthority())
                         //WEB - read for users
                         .requestMatchers(HttpMethod.GET,"/books/**", "/authors/**", "/publishers/**").authenticated()

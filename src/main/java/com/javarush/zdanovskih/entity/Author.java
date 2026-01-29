@@ -18,8 +18,9 @@ public class Author {
     @Column(unique=true)
     private String name;
 
-    public Author(String name) {
+    public Author(long id,String name) {
         this.name = name;
+        this.id=id;
     }
 
     public Author() {

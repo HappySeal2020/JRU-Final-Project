@@ -33,5 +33,21 @@ public class Book {
     private String isbn;
     @Min(value=1, message = "Число страниц должно быть положительным")
     private int pages;
+
+    public Book(long id, String name, List<Author> author, int printYeari, Publisher publisher, String bbk, String isbn, int pages) {
+        //
+        this.id = id;
+        this.name = name;
+        this.authors = author;
+        this.printYear = printYeari;
+        this.publisher = publisher;
+        this.bbk = bbk;
+        this.isbn = isbn;
+        this.pages = pages;
+    }
+
+    public Book() {
+
+    }
 }
 

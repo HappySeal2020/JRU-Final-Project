@@ -1,7 +1,6 @@
 package com.javarush.zdanovskih.handler;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,11 +8,8 @@ import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @ControllerAdvice
@@ -45,23 +41,6 @@ public ResponseEntity<?> handleConstraint(DataIntegrityViolationException ex) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body("Ошибка целостности данных");
 }
-
-/*    Throwable cause = ex.getCause();
-    if (cause instanceof ConstraintViolationException cve) {
-        String constraint = cve.getConstraintName();
-
-        if (constraint != null && constraint.contains("UNIQUE")) {
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body("Cannot add or update due to unique data violation");
-        }
-    }
-    return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body("Cannot perform due to integrity data violation");
-}
-*/
-
     @ExceptionHandler(TransactionSystemException.class)
     public ResponseEntity<?> handleTransactionException(TransactionSystemException ex) {
         Throwable cause = ex.getRootCause();
@@ -96,26 +75,12 @@ public ResponseEntity<?> handleConstraint(DataIntegrityViolationException ex) {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errors);
     }
-/*
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidation(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        errors.put("Data not saved", "Validation Error");
-        ex.getBindingResult().getFieldErrors()
-                .forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
-        log.error(errors.toString());
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(errors);
-    }
-*/
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralException(Exception exception) {
         log.error("Unexpected error: {}", exception.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("An unexpected error occurred. Please try again later.");
     }
-
-
 
 }

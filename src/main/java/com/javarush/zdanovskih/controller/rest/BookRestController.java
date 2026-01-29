@@ -1,6 +1,5 @@
 package com.javarush.zdanovskih.controller.rest;
 
-import com.javarush.zdanovskih.entity.Author;
 import com.javarush.zdanovskih.entity.Book;
 import com.javarush.zdanovskih.service.BookService;
 import jakarta.validation.Valid;
@@ -26,19 +25,6 @@ public class BookRestController {
         this.bookService = bookService;
     }
 
-    //private final BookRepository bookRepository;
-    //public BookController (BookRepository bookRepository){
-    //    this.bookRepository = bookRepository;
-    //}
-    //private final String BOOK_PATH="/books";
-/*
-  //Read
-    @GetMapping(AUTHOR_PATH)
-    @ResponseStatus(HttpStatus.OK)
-    public List<AuthorDto> getAllAuthors() {
-        return authorRepository.findAll().stream().map(Mapper::toAuthorDto).collect(Collectors.toList());
-    }
- */
 
 
     //Read
@@ -80,10 +66,12 @@ public class BookRestController {
         bookService.deleteById(id);
     }
 
-
+/*
     private ResponseStatusException notFound(Author author) {
         return new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
     }
+
+ */
     private ResponseStatusException badRequest(Exception e) {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
     }

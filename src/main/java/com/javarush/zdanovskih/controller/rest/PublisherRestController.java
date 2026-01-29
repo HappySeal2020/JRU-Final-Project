@@ -26,9 +26,7 @@ public class PublisherRestController {
     public PublisherRestController(PublisherRepository publisherRepository) {
         this.publisherRepository = publisherRepository;
     }
-    //public PublisherController(PublisherService publisherService) {
-    //    this.publisherService = publisherService;
-    //}
+
 
     //Read
     @GetMapping(REST_PUBLISHER_PATH)

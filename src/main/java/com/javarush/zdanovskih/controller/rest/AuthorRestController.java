@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 
+import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +37,7 @@ public class AuthorRestController {
     @ResponseStatus(HttpStatus.OK)
     public List<AuthorDto> getAllAuthors() {
         log.info("REST API - getAllAuthors");
-        return authorRepository.findAll().stream().map(Mapper::toAuthorDto).collect(Collectors.toList());
+        return authorRepository.findAll().stream().map(Mapper::toAuthorDto).sorted(Comparator.comparing(AuthorDto::getId)).collect(Collectors.toList());
     }
 
     //Create
@@ -68,10 +69,10 @@ public class AuthorRestController {
         log.info("REST API - Deleting author: {}", id);
         authorRepository.deleteById(id);
     }
-
+/*
     private ResponseStatusException notFound(Author author) {
         return new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found");
-    }
+    }*/
     private ResponseStatusException badRequest(Exception e) {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
     }

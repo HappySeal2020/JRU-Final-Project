@@ -10,11 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import static com.javarush.zdanovskih.constant.Const.WEB_MAP;
 
 @Slf4j
 @Controller
-//@RequestMapping(WEB_MAP)
+
 public class PublishersController {
     private final PublisherRepository publisherRepository;
     public PublishersController(PublisherRepository publisherRepository) {

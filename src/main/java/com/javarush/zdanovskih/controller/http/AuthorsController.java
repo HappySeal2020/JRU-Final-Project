@@ -1,19 +1,20 @@
 package com.javarush.zdanovskih.controller.http;
 
+
 import com.javarush.zdanovskih.entity.Author;
 import com.javarush.zdanovskih.repository.AuthorRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 @Slf4j
 @Controller
-//@RequestMapping(WEB_MAP)
+
 public class AuthorsController {
     private final AuthorRepository authorRepository;
     public AuthorsController(AuthorRepository authorRepository) {
@@ -23,7 +24,7 @@ public class AuthorsController {
     @GetMapping("/authors")
     public String authors(Model model, @RequestParam(defaultValue = "0") int page,
                              @RequestParam(defaultValue = "5") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id"));
         Page<Author> authorsPage = authorRepository.findAll(pageable);
         model.addAttribute("authorsPage", authorsPage);
         model.addAttribute("currentPage", page);
