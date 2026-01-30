@@ -16,7 +16,6 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException ex) {
-        // Собираем сообщения обо всех ошибках валидации
         Map<String, String> errors = new HashMap<>();
         errors.put("Data not saved", "Validation Error");
         ex.getBindingResult().getFieldErrors()
@@ -36,10 +35,10 @@ public ResponseEntity<?> handleConstraint(DataIntegrityViolationException ex) {
     }
     if (msg.contains("foreign key")) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body("Нельзя удалить запись, на которую есть ссылки");
+                .body("Can not delete a linked record");
     }
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body("Ошибка целостности данных");
+            .body("Data integrity error");
 }
     @ExceptionHandler(TransactionSystemException.class)
     public ResponseEntity<?> handleTransactionException(TransactionSystemException ex) {

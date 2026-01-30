@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NotInFutureYear {
 
-    String message() default "Год печати не может быть в будущем";
+    String message() default "Print year can not be in future";
 
     Class<?>[] groups() default {};
 

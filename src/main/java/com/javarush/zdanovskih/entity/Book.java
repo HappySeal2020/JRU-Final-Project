@@ -31,7 +31,7 @@ public class Book {
     public Publisher publisher;
     private String bbk;
     private String isbn;
-    @Min(value=1, message = "Число страниц должно быть положительным")
+    @Min(value=1, message = "Number of pages must be positive")
     private int pages;
 
     public Book(long id, String name, List<Author> author, int printYeari, Publisher publisher, String bbk, String isbn, int pages) {
