@@ -4,7 +4,6 @@ import com.javarush.zdanovskih.Project5Application;
 import com.javarush.zdanovskih.entity.Author;
 import com.javarush.zdanovskih.entity.Book;
 import com.javarush.zdanovskih.entity.Publisher;
-import com.javarush.zdanovskih.repository.AuthorRepository;
 import com.javarush.zdanovskih.repository.BookRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

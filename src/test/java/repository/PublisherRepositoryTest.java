@@ -1,9 +1,7 @@
 package repository;
 
 import com.javarush.zdanovskih.Project5Application;
-import com.javarush.zdanovskih.entity.Author;
 import com.javarush.zdanovskih.entity.Publisher;
-import com.javarush.zdanovskih.repository.AuthorRepository;
 import com.javarush.zdanovskih.repository.PublisherRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

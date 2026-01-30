@@ -1,7 +1,6 @@
 package controller.rest;
 
 import com.javarush.zdanovskih.Project5Application;
-import com.javarush.zdanovskih.controller.rest.AuthorRestController;
 import com.javarush.zdanovskih.controller.rest.BookRestController;
 import com.javarush.zdanovskih.entity.Author;
 import com.javarush.zdanovskih.entity.Book;

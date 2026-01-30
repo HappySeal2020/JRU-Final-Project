@@ -69,10 +69,7 @@ public class AuthorRestController {
         log.info("REST API - Deleting author: {}", id);
         authorRepository.deleteById(id);
     }
-/*
-    private ResponseStatusException notFound(Author author) {
-        return new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found");
-    }*/
+
     private ResponseStatusException badRequest(Exception e) {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
     }

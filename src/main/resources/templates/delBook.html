@@ -1,5 +1,6 @@
 <form th:action="@{/books/del}" th:object="${book}" method="post">
     <body>
+    <input type="hidden" name="_method" value="delete">
     <input type="hidden" name="_csrf" th:value="${_csrf.token}">
     <input type="hidden" th:field="*{id}"/>
 

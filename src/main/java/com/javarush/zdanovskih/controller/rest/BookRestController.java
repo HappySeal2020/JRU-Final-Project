@@ -66,12 +66,6 @@ public class BookRestController {
         bookService.deleteById(id);
     }
 
-/*
-    private ResponseStatusException notFound(Author author) {
-        return new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
-    }
-
- */
     private ResponseStatusException badRequest(Exception e) {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
     }

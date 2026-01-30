@@ -3,15 +3,12 @@ package repository;
 import com.javarush.zdanovskih.Project5Application;
 import com.javarush.zdanovskih.entity.Author;
 import com.javarush.zdanovskih.repository.AuthorRepository;
-import com.javarush.zdanovskih.repository.BookRepository;
-import com.javarush.zdanovskih.repository.PublisherRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
 

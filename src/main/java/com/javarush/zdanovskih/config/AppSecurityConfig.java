@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static com.javarush.zdanovskih.constant.Const.REST_MAP;
-import static com.javarush.zdanovskih.constant.Const.WEB_MAP;
 
 @Configuration
 public class AppSecurityConfig {

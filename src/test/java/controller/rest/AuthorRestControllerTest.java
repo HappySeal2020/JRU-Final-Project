@@ -4,7 +4,6 @@ import com.javarush.zdanovskih.Project5Application;
 import com.javarush.zdanovskih.controller.rest.AuthorRestController;
 import com.javarush.zdanovskih.dto.AuthorDto;
 import com.javarush.zdanovskih.entity.Author;
-import com.javarush.zdanovskih.entity.Publisher;
 import com.javarush.zdanovskih.handler.GlobalExceptionHandler;
 import com.javarush.zdanovskih.repository.AuthorRepository;
 import com.javarush.zdanovskih.repository.PublisherRepository;
@@ -26,8 +25,6 @@ import static com.javarush.zdanovskih.constant.Const.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import static org.mockito.Mockito.*;
 
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(AuthorRestController.class)
