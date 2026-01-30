@@ -1,6 +1,8 @@
 package controller.rest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javarush.zdanovskih.Project5Application;
 import com.javarush.zdanovskih.controller.rest.PublisherRestController;
+import com.javarush.zdanovskih.dto.PublisherDto;
 import com.javarush.zdanovskih.entity.Publisher;
 import com.javarush.zdanovskih.repository.AuthorRepository;
 import com.javarush.zdanovskih.repository.PublisherRepository;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = Project5Application.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class PublisherRestControllerTest {
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -96,5 +102,34 @@ public class PublisherRestControllerTest {
                 .andExpect(status().isNoContent());
         verify(publisherRepository, times(1)).deleteById(id);
     }
+
+    @Test
+    void shouldReturnValidationError() throws Exception {
+        PublisherDto requestPublisher = new PublisherDto(0L, "", "new site");
+
+        mockMvc.perform(post(REST_MAP+REST_PUBLISHER_PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestPublisher)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.name")
+                        .value("Publisher name is mandatory field"));
+    }
+
+    @Test
+    void shouldReturnConflictWhenNameIsNotUnique() throws Exception {
+
+        PublisherDto requestPublisher = new PublisherDto(0L, "New Publisher", "https://www.piter.com");
+
+        when(publisherRepository.save(any()))
+                .thenThrow(new DataIntegrityViolationException("Duplicate entry"));
+
+        mockMvc.perform(post(REST_MAP + REST_PUBLISHER_PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestPublisher)))
+                .andExpect(status().isConflict())
+                .andExpect(content()
+                        .string("Data already exists"));
+    }
+
 
 }

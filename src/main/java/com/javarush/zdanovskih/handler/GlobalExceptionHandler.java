@@ -32,7 +32,7 @@ public ResponseEntity<?> handleConstraint(DataIntegrityViolationException ex) {
     String msg = ex.getMostSpecificCause().getMessage();
     if (msg.contains("Duplicate")) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body("Запись с таким значением уже существует");
+                .body("Data already exists");
     }
     if (msg.contains("foreign key")) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
