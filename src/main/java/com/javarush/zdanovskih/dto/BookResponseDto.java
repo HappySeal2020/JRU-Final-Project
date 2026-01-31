@@ -25,18 +25,7 @@ public class BookResponseDto {
     @JsonProperty("author")
     private final List<Author> author;
 
-    /*
-    public BookResponseDto(Book book, Publisher publisher, List<Author> author) {
-        this.id = book.getId();
-        this.name = book.getName();
-        this.printYear = book.getPrintYear();
-        this.bbk = book.getBbk();
-        this.isbn = book.getIsbn();
-        this.pages = book.getPages();
-        this.publisher = publisher;
-        this.author = author;
-    }
-*/
+
     public BookResponseDto(long id, String name, List<Author> authors, int printYear, Publisher publisher, String bbk, String isbn, int pages) {
         this.id = id;
         this.name = name;
@@ -47,7 +36,5 @@ public class BookResponseDto {
         this.pages = pages;
         this.publisher = publisher;
     }
-
-    //public BookResponseDto()
 
 }

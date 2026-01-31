@@ -17,10 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.javarush.zdanovskih.constant.Const.WEB_MAP;
 @Slf4j
 @Controller
-//@RequestMapping(WEB_MAP)
+
 public class BooksController {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
@@ -79,7 +78,7 @@ public class BooksController {
     public String addBook( Model model) {
         List<Author> allAuthors = authorRepository.findAll();
         List<Publisher> allPublishers = publisherRepository.findAll();
-        model.addAttribute("book", new Book());
+        model.addAttribute("book", new Book(1L, "", null, 0, null, "", "", 0));
         model.addAttribute("allAuthors", allAuthors);
         model.addAttribute("allPublishers", allPublishers);
         log.info("Add book" );
