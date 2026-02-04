@@ -21,6 +21,29 @@
 
 <h2>Список книг</h2>
 
+<form method="get" th:action="@{/books}">
+    <input type="text" name="name" placeholder="Filter by name"
+           th:value="${name}">
+    <input type="text" name="author" placeholder="Filter by author"
+           th:value="${aurhor}">
+    <input type="text" name="printYearFrom" placeholder="Filter by print year (= or min)"
+           th:value="${printYearFrom}">
+    <input type="text" name="printYearTo" placeholder="Filter by print year (max)"
+           th:value="${printYearTo}">
+    <input type="text" name="publisher" placeholder="Filter by publisher"
+           th:value="${publisher}">
+    <input type="text" name="bbk" placeholder="Filter by bbk"
+           th:value="${bbk}">
+    <input type="text" name="isbn" placeholder="Filter by isbn"
+           th:value="${isbn}">
+    <input type="text" name="pagesFrom" placeholder="Filter by pages (= or min)"
+           th:value="${pagesFrom}">
+    <input type="text" name="pagesTo" placeholder="Filter by pages (max)"
+           th:value="${pagesTo}">
+
+    <button type="submit">Find</button>
+</form>
+
 <table>
     <thead>
     <tr>
@@ -65,19 +88,22 @@
 <!-- ПАГИНАЦИЯ -->
 <div class="pagination">
     <a th:if="${booksPage.hasPrevious()}"
-       th:href="@{/books(page=${currentPage - 1})}">
+       th:href="@{/books(page=${currentPage - 1}, name=${name}, author=${author}, printYearFrom=${printYearFrom},
+       printYearTo=${printYearTo}, bbk=${bbk}, isbn=${isbn}, pagesFrom=${pagesFrom}, pagesTo=${pagesTo})}">
         ⬅ Предыдущая
     </a>
 
     <span th:each="i : ${#numbers.sequence(0, booksPage.totalPages - 1)}">
-        <a th:href="@{/books(page=${i})}"
+        <a th:href="@{/books(page=${i}, name=${name}, author=${author}, printYearFrom=${printYearFrom},
+       printYearTo=${printYearTo}, bbk=${bbk}, isbn=${isbn}, pagesFrom=${pagesFrom}, pagesTo=${pagesTo} )}"
            th:text="${i + 1}"
            th:classappend="${i == currentPage} ? 'active'">
         </a>
     </span>
 
     <a th:if="${booksPage.hasNext()}"
-       th:href="@{/books(page=${currentPage + 1})}">
+       th:href="@{/books(page=${currentPage + 1}, name=${name}, author=${author}, printYearFrom=${printYearFrom},
+       printYearTo=${printYearTo}, bbk=${bbk}, isbn=${isbn}, pagesFrom=${pagesFrom}, pagesTo=${pagesTo})}">
         Следующая ➡
     </a>
 </div>

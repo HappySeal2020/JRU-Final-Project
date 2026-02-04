@@ -7,6 +7,8 @@ import com.javarush.zdanovskih.entity.Publisher;
 import com.javarush.zdanovskih.repository.AuthorRepository;
 import com.javarush.zdanovskih.repository.BookRepository;
 import com.javarush.zdanovskih.repository.PublisherRepository;
+import com.javarush.zdanovskih.specification.BookSpecification;
+import com.javarush.zdanovskih.specification.PublisherSpecification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,11 +34,47 @@ public class BooksController {
 
     @GetMapping("/books")
     public String books(Model model, @RequestParam(defaultValue = "0") int page,
-                             @RequestParam(defaultValue = "5") int size) {
+                             @RequestParam(defaultValue = "5") int size,
+                        @RequestParam(required = false) String name,
+                        @RequestParam(required = false) String author,
+                        @RequestParam(required = false) Integer printYearFrom,
+                        @RequestParam(required = false) Integer printYearTo,
+                        @RequestParam(required = false) String publisher,
+                        @RequestParam(required = false) String bbk,
+                        @RequestParam(required = false) String isbn,
+                        @RequestParam(required = false) Integer pagesFrom,
+                        @RequestParam(required = false) Integer pagesTo) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Book> booksPage = bookRepository.findAll(pageable);
+        Page<Book> booksPage;
+        log.info("Getting books: page={}, size={}, name={}, author={}, printYearFrom={}, printYearTo={}, publisher={}, bbk={}, isbn={}, pagesFrom={}, pagesTo={}",
+                page, size, name, author, printYearFrom, printYearTo, publisher, bbk, isbn, pagesFrom, pagesTo);
+        if((name!=null && !name.isBlank()) ||
+                (author!=null && !author.isBlank()) ||
+                (printYearFrom!=null) ||
+                (printYearTo!=null) ||
+                (publisher!=null && !publisher.isBlank()) ||
+                (bbk!=null && !bbk.isBlank()) ||
+                (isbn!=null && !isbn.isBlank()) ||
+                (pagesFrom !=null) ||
+                (pagesTo !=null)) {
+            booksPage = bookRepository.findAll(BookSpecification.filter(name, author, printYearFrom, printYearTo,
+                    publisher, bbk, isbn, pagesFrom, pagesTo),pageable);
+        }
+        else {
+            booksPage = bookRepository.findAll(pageable);
+        }
         model.addAttribute("booksPage", booksPage);
         model.addAttribute("currentPage", page);
+        model.addAttribute("name", name);
+        model.addAttribute("author", author);
+        model.addAttribute("printYearFrom", printYearFrom);
+        model.addAttribute("printYearTo", printYearTo);
+        model.addAttribute("publisher", publisher);
+        model.addAttribute("bbk", bbk);
+        model.addAttribute("isbn", isbn);
+        model.addAttribute("pagesFrom", pagesFrom);
+        model.addAttribute("pagesTo", pagesTo);
+
         return "books";
     }
 

@@ -20,7 +20,14 @@
 <body>
 
 <h2>Список издателей</h2>
-
+<form method="get" th:action="@{/publishers}">
+    <input type="text" name="name" placeholder="Filter by name"
+           th:value="${name}">
+    <!--<button type="submit">Find</button> -->
+    <input type="text" name="site" placeholder="Filter by site"
+           th:value="${site}">
+    <button type="submit">Find</button>
+</form>
 <table>
     <thead>
     <tr>
@@ -55,19 +62,19 @@
 <!-- ПАГИНАЦИЯ -->
 <div class="pagination">
     <a th:if="${publishersPage.hasPrevious()}"
-       th:href="@{/publishers(page=${currentPage - 1})}">
+       th:href="@{/publishers(page=${currentPage - 1}, name=${name}, site=${site})}">
         ⬅ Предыдущая
     </a>
 
     <span th:each="i : ${#numbers.sequence(0, publishersPage.totalPages - 1)}">
-        <a th:href="@{/publishers(page=${i})}"
+        <a th:href="@{/publishers(page=${i}, name=${name}, site=${site})}"
            th:text="${i + 1}"
            th:classappend="${i == currentPage} ? 'active'">
         </a>
     </span>
 
     <a th:if="${publishersPage.hasNext()}"
-       th:href="@{/publishers(page=${currentPage + 1})}">
+       th:href="@{/publishers(page=${currentPage + 1}, name=${name}, site=${site})}">
         Следующая ➡
     </a>
 </div>

@@ -3,6 +3,7 @@ package com.javarush.zdanovskih.controller.http;
 
 import com.javarush.zdanovskih.entity.Author;
 import com.javarush.zdanovskih.repository.AuthorRepository;
+import com.javarush.zdanovskih.specification.AuthorSpecification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,11 +24,19 @@ public class AuthorsController {
 
     @GetMapping("/authors")
     public String authors(Model model, @RequestParam(defaultValue = "0") int page,
-                             @RequestParam(defaultValue = "5") int size) {
+                             @RequestParam(defaultValue = "5") int size,
+                          @RequestParam(required = false) String name) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id"));
-        Page<Author> authorsPage = authorRepository.findAll(pageable);
+        Page<Author> authorsPage;
+        if (name != null && !name.isBlank()) {
+            authorsPage = authorRepository.findAll(AuthorSpecification.filter(name),pageable);
+        } else {
+            authorsPage = authorRepository.findAll(pageable);
+        }
+
         model.addAttribute("authorsPage", authorsPage);
         model.addAttribute("currentPage", page);
+        model.addAttribute("name", name);
 
         return "authors";
     }

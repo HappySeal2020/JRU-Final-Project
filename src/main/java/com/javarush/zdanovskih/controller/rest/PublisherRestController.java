@@ -2,6 +2,7 @@ package com.javarush.zdanovskih.controller.rest;
 
 import com.javarush.zdanovskih.entity.Publisher;
 import com.javarush.zdanovskih.repository.PublisherRepository;
+import com.javarush.zdanovskih.specification.PublisherSpecification;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,10 +30,18 @@ public class PublisherRestController {
 
 
     //Read
+    /*
     @GetMapping(REST_PUBLISHER_PATH)
     @ResponseStatus(HttpStatus.OK)
     public List<Publisher> getAllPublishers() {
         return publisherRepository.findAll();
+    }*/
+
+    @GetMapping(REST_PUBLISHER_PATH)
+    @ResponseStatus(HttpStatus.OK)
+    public List<Publisher> getAllPublishers(@RequestParam(required = false) String name,
+                                            @RequestParam(required = false) String site) {
+        return publisherRepository.findAll(PublisherSpecification.filter(name, site));
     }
 
     //Create

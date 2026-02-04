@@ -1,4 +1,4 @@
-package controller.rest;
+package com.javarush.zdanovskih.controller.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javarush.zdanovskih.Project5Application;
 import com.javarush.zdanovskih.entity.Author;

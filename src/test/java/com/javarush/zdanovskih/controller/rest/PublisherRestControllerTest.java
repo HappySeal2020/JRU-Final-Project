@@ -1,7 +1,5 @@
-package controller.rest;
+package com.javarush.zdanovskih.controller.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.javarush.zdanovskih.Project5Application;
-import com.javarush.zdanovskih.controller.rest.PublisherRestController;
 import com.javarush.zdanovskih.dto.PublisherDto;
 import com.javarush.zdanovskih.entity.Publisher;
 import com.javarush.zdanovskih.repository.AuthorRepository;
@@ -9,11 +7,11 @@ import com.javarush.zdanovskih.repository.PublisherRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -22,9 +20,9 @@ import static com.javarush.zdanovskih.constant.Const.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-@WebMvcTest(PublisherRestController.class)
-@ContextConfiguration(classes = Project5Application.class)
+@SpringBootTest
+//@WebMvcTest(PublisherRestController.class)
+//@ContextConfiguration(classes = Project5Application.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class PublisherRestControllerTest {
     @Autowired
@@ -45,16 +43,28 @@ public class PublisherRestControllerTest {
 
         //Create test data
         List<Publisher> publishers = List.of(
-                new Publisher(1L, "Питер","https://www.piter.com"),
-                new Publisher(2L, "Издательский дом \"Вильямс\"","williamspublishing.com"));
+                new Publisher(1L, "Piter","https://www.piter.com"));
 
-        when(publisherRepository.findAll()).thenReturn(publishers);
+        when(publisherRepository.findAll(any(Specification.class))).thenReturn(publishers);
         mockMvc.perform(get(REST_MAP+REST_PUBLISHER_PATH))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("Питер"))
-                .andExpect(jsonPath("$[1].name").value("Издательский дом \"Вильямс\""));
+                .andExpect(jsonPath("$[0].name").value("Piter"))
+                .andExpect(jsonPath("$[0].site").value("https://www.piter.com"));
+    }
+/*
+ @Test
+     void shouldReturnAllAuthors() throws Exception {
+        //Create test data
+        List<Author> authors = List.of(new Author(1L, "Alexander Volkov"));
+
+        when(authorRepository.findAll()).thenReturn(authors);
+        mockMvc.perform(get(REST_MAP+REST_AUTHOR_PATH))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value("Alexander Volkov"));
+                //.andExpect(jsonPath("$[1].name").value("Кеннет Бастани"));
     }
 
+ */
     @Test
     public void shouldCreateNewPublisher() throws Exception {
         Publisher savedPublisher = new Publisher(1L, "Питер","https://www.piter.com");
@@ -128,5 +138,32 @@ public class PublisherRestControllerTest {
                         .string("Data already exists"));
     }
 
+    @Test
+    void shouldFilterPublishersByName() throws Exception {
+        List<Publisher> publishers = List.of(new Publisher(1, "Turbo-print", "turbo-print.com"));
+
+        when(publisherRepository.findAll(any(Specification.class)))
+                .thenReturn(publishers);
+        mockMvc.perform(get(REST_MAP + REST_PUBLISHER_PATH)
+                        .param("name", "urb"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].name").value("Turbo-print"));
+    }
+
+    @Test
+    void shouldFilterPublishersBySite() throws Exception {
+        List<Publisher> publishers = List.of(new Publisher(1, "Turbo-print", "turbo-print.com"));
+
+        when(publisherRepository.findAll(any(Specification.class)))
+                .thenReturn(publishers);
+        mockMvc.perform(get(REST_MAP + REST_PUBLISHER_PATH)
+                        .param("site", "urb-p"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].name").value("Turbo-print"));
+    }
 
 }

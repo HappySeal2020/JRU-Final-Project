@@ -4,6 +4,7 @@ import com.javarush.zdanovskih.dto.AuthorDto;
 import com.javarush.zdanovskih.entity.Author;
 import com.javarush.zdanovskih.mapper.Mapper;
 import com.javarush.zdanovskih.repository.AuthorRepository;
+import com.javarush.zdanovskih.specification.AuthorSpecification;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,13 +33,13 @@ public class AuthorRestController {
         this.authorRepository = authorRepository;
     }
 
-    //Read
     @GetMapping(REST_AUTHOR_PATH)
     @ResponseStatus(HttpStatus.OK)
-    public List<AuthorDto> getAllAuthors() {
-        log.info("REST API - getAllAuthors");
-        return authorRepository.findAll().stream().map(Mapper::toAuthorDto).sorted(Comparator.comparing(AuthorDto::getId)).collect(Collectors.toList());
+    public List<AuthorDto> getAuthors(@RequestParam(required = false) String name) {
+        return authorRepository.findAll(AuthorSpecification.filter(name)).stream().map(Mapper::toAuthorDto).sorted(Comparator.comparing(AuthorDto::getId)).collect(Collectors.toList());
+        //return authorRepository.findAll().stream().map(Mapper::toAuthorDto).sorted(Comparator.comparing(AuthorDto::getId)).collect(Collectors.toList());
     }
+
 
     //Create
     @PostMapping(REST_AUTHOR_PATH)

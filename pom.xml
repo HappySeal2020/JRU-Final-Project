@@ -135,47 +135,6 @@
     <build>
         <plugins>
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-
-                    <execution>
-                        <id>docker-start-mysql</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>docker</executable>
-                            <commandlineArgs>start mysql</commandlineArgs>
-                            <successCodes>
-                                <successCode>0</successCode>
-                                <successCode>1</successCode>
-                                <successCode>125</successCode>
-                            </successCodes>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>docker-load-mysql</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>docker</executable>
-                            <commandlineArgs>run --name mysql -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=project --restart unless-stopped -v mysql:/var/lib/mysql mysql:8 </commandlineArgs>
-                            <successCodes>
-                                <successCode>0</successCode>
-                                <successCode>125</successCode>
-                            </successCodes>
-                        </configuration>
-                    </execution>
-
-                </executions>
-            </plugin>
 
 
         </plugins>

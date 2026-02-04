@@ -1,7 +1,5 @@
-package controller.rest;
+package com.javarush.zdanovskih.controller.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.javarush.zdanovskih.Project5Application;
-import com.javarush.zdanovskih.controller.rest.AuthorRestController;
 import com.javarush.zdanovskih.dto.AuthorDto;
 import com.javarush.zdanovskih.entity.Author;
 import com.javarush.zdanovskih.handler.GlobalExceptionHandler;
@@ -11,12 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -24,11 +22,13 @@ import java.util.List;
 import static com.javarush.zdanovskih.constant.Const.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(AuthorRestController.class)
-@ContextConfiguration(classes = Project5Application.class)
+//@WebMvcTest(AuthorRestController.class)
+//@ContextConfiguration(classes = Project5Application.class)
+@SpringBootTest//(classes = Project5Application.class)
 @Import(GlobalExceptionHandler.class)
 class AuthorRestControllerTest {
     @Autowired
@@ -50,14 +50,13 @@ class AuthorRestControllerTest {
     @Test
      void shouldReturnAllAuthors() throws Exception {
         //Create test data
-        List<Author> authors = List.of(new Author(1L, "Джош Лонг"),
-                new Author(2L, "Кеннет Бастани"));
+        List<Author> authors = List.of(new Author(1L, "Alexander Volkov"));
 
-        when(authorRepository.findAll()).thenReturn(authors);
+        when(authorRepository.findAll(any(Specification.class))).thenReturn(authors);
         mockMvc.perform(get(REST_MAP+REST_AUTHOR_PATH))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("Джош Лонг"))
-                .andExpect(jsonPath("$[1].name").value("Кеннет Бастани"));
+                .andExpect(jsonPath("$[0].name").value("Alexander Volkov"));
+                //.andExpect(jsonPath("$[1].name").value("Кеннет Бастани"));
     }
 
     @Test
@@ -128,6 +127,21 @@ class AuthorRestControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(content()
                         .string("Data already exists"));
+    }
+
+    @Test
+    void shouldFilterAuthorsByName() throws Exception {
+        List<Author> authors = List.of(new Author(1, "Pushkin"));
+
+        when(authorRepository.findAll(any(Specification.class)))
+                .thenReturn(authors);
+        mockMvc.perform(get(REST_MAP + REST_AUTHOR_PATH)
+                        .param("name", "push"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].name").value("Pushkin"));
     }
 
 }

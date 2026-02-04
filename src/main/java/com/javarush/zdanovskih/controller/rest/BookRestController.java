@@ -30,11 +30,17 @@ public class BookRestController {
     //Read
     @GetMapping(REST_BOOK_PATH)
     @ResponseStatus(HttpStatus.OK)
-
-    public List<Book> getAllBooks() {
-        return bookService.getAllBooks();
+    public List<Book> getAllBooks(@RequestParam(required = false) String name,
+                                  @RequestParam(required = false) String author,
+                                  @RequestParam(required = false) Integer printYearFrom,
+                                  @RequestParam(required = false) Integer printYearTo,
+                                  @RequestParam(required = false) String publisher,
+                                  @RequestParam(required = false) String bbk,
+                                  @RequestParam(required = false) String isbn,
+                                  @RequestParam(required = false) Integer pagesFrom,
+                                  @RequestParam(required = false) Integer pagesTo) {
+        return bookService.getAllBooks(name, author, printYearFrom,printYearTo, publisher, bbk, isbn, pagesFrom, pagesTo);
     }
-
     //Create
     @PostMapping (REST_BOOK_PATH)
     @ResponseStatus(HttpStatus.CREATED)
