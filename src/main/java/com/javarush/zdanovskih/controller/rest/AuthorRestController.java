@@ -4,12 +4,16 @@ import com.javarush.zdanovskih.dto.AuthorDto;
 import com.javarush.zdanovskih.entity.Author;
 import com.javarush.zdanovskih.mapper.Mapper;
 import com.javarush.zdanovskih.repository.AuthorRepository;
+import com.javarush.zdanovskih.specification.AuthorSpecification;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 
+import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +24,7 @@ import static com.javarush.zdanovskih.constant.Const.REST_MAP;
 @Slf4j
 @RestController
 @RequestMapping(REST_MAP)
+@Validated
 public class AuthorRestController {
 
     private final AuthorRepository authorRepository;
@@ -28,34 +33,32 @@ public class AuthorRestController {
         this.authorRepository = authorRepository;
     }
 
-    //Read
     @GetMapping(REST_AUTHOR_PATH)
     @ResponseStatus(HttpStatus.OK)
-    public List<AuthorDto> getAllAuthors() {
-        return authorRepository.findAll().stream().map(Mapper::toAuthorDto).collect(Collectors.toList());
+    public List<AuthorDto> getAuthors(@RequestParam(required = false) String name) {
+        return authorRepository.findAll(AuthorSpecification.filter(name)).stream().map(Mapper::toAuthorDto).sorted(Comparator.comparing(AuthorDto::getId)).collect(Collectors.toList());
+        //return authorRepository.findAll().stream().map(Mapper::toAuthorDto).sorted(Comparator.comparing(AuthorDto::getId)).collect(Collectors.toList());
     }
+
 
     //Create
     @PostMapping(REST_AUTHOR_PATH)
     @ResponseStatus(HttpStatus.CREATED)
-    public AuthorDto createAuthor (@RequestBody AuthorDto author) {
-        try{
-            return Mapper.toAuthorDto(authorRepository.save(Mapper.toAuthor(author)));
-        } catch (Exception e){
-            log.error("Create author={}", author, e);
-            throw badRequest(e);
-        }
+    public AuthorDto createAuthor (@Valid @RequestBody AuthorDto author) {
+        log.info("REST API - Creating author: {}", author);
+        return Mapper.toAuthorDto(authorRepository.save(Mapper.toAuthor(author)));
     }
 
     //Update
     @PutMapping(REST_AUTHOR_PATH+"/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Author updateAuthor (@PathVariable Long id, @RequestBody Author author) {
+    public Author updateAuthor (@PathVariable Long id, @Valid @RequestBody Author author) {
         if(id.equals(author.getId())) {
+            log.info("REST API - Updating author: {}", author);
             return authorRepository.save(author);
         }
         else {
-            log.error("Update author with incorrect id={}", id);
+            log.error("REST API - Update author with incorrect id={} failed", id);
             throw badRequest(new InputMismatchException("Incorrect id"));
         }
     }
@@ -63,18 +66,11 @@ public class AuthorRestController {
     //Delete
     @DeleteMapping(REST_AUTHOR_PATH+"/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePublisher(@PathVariable Long id) {
-        try{
-            authorRepository.deleteById(id);
-        } catch (Exception e){
-            log.error("Delete author id={}", id, e);
-            throw badRequest(e);
-        }
+    public void deleteAuthor(@PathVariable Long id) {
+        log.info("REST API - Deleting author: {}", id);
+        authorRepository.deleteById(id);
     }
 
-    private ResponseStatusException notFound(Author author) {
-        return new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found");
-    }
     private ResponseStatusException badRequest(Exception e) {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
     }

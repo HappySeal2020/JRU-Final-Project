@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static com.javarush.zdanovskih.constant.Const.REST_MAP;
-import static com.javarush.zdanovskih.constant.Const.WEB_MAP;
 
 @Configuration
 public class AppSecurityConfig {
@@ -31,12 +30,14 @@ public class AppSecurityConfig {
                         //WEB
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/logout").permitAll()
+                        .requestMatchers("/actuator/**").authenticated()
                         .requestMatchers(HttpMethod.GET,"/welcome")
+
                         .hasAnyAuthority(Role.ADMIN.getAuthority(),Role.USER.getAuthority())
                         //WEB - read for users
-                        .requestMatchers(HttpMethod.GET,"/books", "/authors", "/publishers").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/books/**", "/authors/**", "/publishers/**").authenticated()
                         //WEB - full control for admins
-                        .requestMatchers("/books/**", "/authors/**", "/publishers/**","/authors/put/**").hasAnyAuthority(Role.ADMIN.getAuthority())
+                        .requestMatchers("/books/**", "/authors/**", "/publishers/**","/authors/**").hasAnyAuthority(Role.ADMIN.getAuthority())
 
                 )
                 .formLogin(form -> form

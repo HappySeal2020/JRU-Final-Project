@@ -1,9 +1,8 @@
 package com.javarush.zdanovskih.constant;
 
-public class Const {
+public final class Const {
     //http constants
     public static final String WEB_MAP="/final-project";
-    //public static final String WEB_MAP="";
 
     //REST constants
     public static final String REST_MAP = "/api";
