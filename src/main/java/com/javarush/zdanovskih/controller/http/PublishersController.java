@@ -2,6 +2,7 @@ package com.javarush.zdanovskih.controller.http;
 
 import com.javarush.zdanovskih.entity.Publisher;
 import com.javarush.zdanovskih.repository.PublisherRepository;
+import com.javarush.zdanovskih.specification.PublisherSpecification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,11 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import static com.javarush.zdanovskih.constant.Const.WEB_MAP;
 
 @Slf4j
 @Controller
-//@RequestMapping(WEB_MAP)
+
 public class PublishersController {
     private final PublisherRepository publisherRepository;
     public PublishersController(PublisherRepository publisherRepository) {
@@ -23,11 +23,22 @@ public class PublishersController {
 
     @GetMapping("/publishers")
     public String publishers(Model model, @RequestParam(defaultValue = "0") int page,
-                             @RequestParam(defaultValue = "5") int size) {
+                             @RequestParam(defaultValue = "5") int size,
+                             @RequestParam (required = false) String name,
+                             @RequestParam (required = false) String site) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Publisher> publishersPage = publisherRepository.findAll(pageable);
+        Page<Publisher> publishersPage;
+        log.info("Getting publishers: page={}, size={}, name={}, site={}", page, size, name, site);
+        if ((name != null && !name.isBlank()) || (site != null && !site.isBlank())) {
+            publishersPage = publisherRepository.findAll(PublisherSpecification.filter(name, site), pageable);
+        }
+        else {
+                publishersPage = publisherRepository.findAll(pageable);
+            }
         model.addAttribute("publishersPage", publishersPage);
         model.addAttribute("currentPage", page);
+        model.addAttribute("name", name);
+        model.addAttribute("site", site);
         return "publishers";
     }
 

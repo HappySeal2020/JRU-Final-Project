@@ -21,6 +21,12 @@
 
 <h2>Список авторов</h2>
 
+<form method="get" th:action="@{/authors}">
+    <input type="text" name="name" placeholder="Filter by name"
+           th:value="${name}">
+    <button type="submit">Find</button>
+</form>
+
 <table>
     <thead>
     <tr>
@@ -52,19 +58,19 @@
 <!-- ПАГИНАЦИЯ -->
 <div class="pagination">
     <a th:if="${authorsPage.hasPrevious()}"
-       th:href="@{/authors(page=${currentPage - 1})}">
+       th:href="@{/authors(page=${currentPage - 1}, name=${name})}">
         ⬅ Предыдущая
     </a>
 
     <span th:each="i : ${#numbers.sequence(0, authorsPage.totalPages - 1)}">
-        <a th:href="@{/authors(page=${i})}"
+        <a th:href="@{/authors(page=${i},name=${name})}"
            th:text="${i + 1}"
            th:classappend="${i == currentPage} ? 'active'">
         </a>
     </span>
 
     <a th:if="${authorsPage.hasNext()}"
-       th:href="@{/authors(page=${currentPage + 1})}">
+       th:href="@{/authors(page=${currentPage + 1}, name=${name})}">
         Следующая ➡
     </a>
 </div>
