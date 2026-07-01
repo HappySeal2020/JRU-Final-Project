@@ -32,8 +32,8 @@ TestContainers
 Rest Assured  
 
 ## 3. How to run
-git clone git@github.com:HappySeal2020/bank_REST.git ???   
-cd bank_REST  ???
+git clone -b TestTaskCircleDevs --single-branch  https://github.com/HappySeal2020/JRU-Final-Project.git
+cd JRU-Final-Project
 
 _Run all in Docker:_  
 (if first time) docker compose up --build    
