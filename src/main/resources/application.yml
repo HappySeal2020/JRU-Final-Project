@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: test_task_for_circle_devs
+
+  #profiles:
+  #  active: dev
+
+
+  datasource:
+    #url: jdbc:postgresql://localhost:5432/task_circle_devs
+    username: postgres
+    password: postgres
+    driver-class-name:  org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  #liquibase:
+  #  change-log: classpath:/db/migration/db.changelog-master.yaml
+
+  flyway:
+    #enabled: false
+    baseline-on-migrate: true
+
+
+server:
+  port: 8080
+  servlet:
+    context-path: /test-task-cd
+
+logging:
+  level:
+    org:
+      springframework:
+        root: INFO
+        springfox: INFO
+        security: DEBUG
+
+
+
+

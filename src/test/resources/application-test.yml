@@ -1,0 +1,14 @@
+spring:
+  flyway:
+    clean-disabled: false
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/task_circle_devs
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+logging:
+  level:
+    org.testcontainers: INFO

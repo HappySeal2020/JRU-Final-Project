@@ -1,0 +1,41 @@
+package com.circle_devs.zdanovskih.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
+@Entity
+@Table(name = "book")
+public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @NotEmpty(message="Book name is mandatory field")
+    @NotNull(message="Book name is mandatory field")
+    @Column(unique=true)
+    private String name;
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name="author_to_book", joinColumns = @JoinColumn(name="book_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name="author_id", referencedColumnName = "id"))
+    private List<Author> authors = new ArrayList<>();
+    @NotInFutureYear
+    @Min(value = 1900, message = "Print year must be greater 1900")
+    private int printYear;
+    @ManyToOne @JoinColumn (name="publisher_id")
+    public Publisher publisher;
+    private String bbk;
+    private String isbn;
+    @Min(value=1, message = "Number of pages must be positive")
+    private int pages;
+
+    public Book() {
+
+    }
+}
+
